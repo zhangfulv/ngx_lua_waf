@@ -1,10 +1,8 @@
 ##ngx_lua_waf
 
-ngx_lua_waf是我刚入职趣游时候开发的一个基于ngx_lua的web应用防火墙。
+ngx_lua_waf是我转自大神的，源地址：
 
-代码很简单，开发初衷主要是使用简单，高性能和轻量级。
-
-现在开源出来，遵从MIT许可协议。其中包含我们的过滤规则。如果大家有什么建议和想fa，欢迎和我一起完善。
+https://github.com/loveshell/ngx_lua_waf
 
 ###用途：
     	
@@ -31,6 +29,7 @@ nginx安装路径假设为:/usr/local/nginx/conf/
 
 在nginx.conf的http段添加
 两个;;代表包含本地原本的库，如果不加，则改变获取库的路径，有可能导致原工具找不到
+
 		lua_package_path "/usr/local/nginx/conf/waf/?.lua;;";
         lua_shared_dict limit 10m;
         init_by_lua_file  /usr/local/nginx/conf/waf/init.lua; 
@@ -88,11 +87,7 @@ nginx安装路径假设为:/usr/local/nginx/conf/
 注意:默认，本机在白名单不过滤，可自行调整config.lua配置
 
 
-###效果图如下：
 
-![sec](http://i.imgur.com/wTgOcm2.png)
-
-![sec](http://i.imgur.com/DqU30au.png)
 
 ###规则更新：
 
@@ -116,6 +111,8 @@ nginx安装路径假设为:/usr/local/nginx/conf/
 	默认开启了get和post过滤，需要开启cookie过滤的，编辑waf.lua取消部分--注释即可
 	
 	日志文件名称格式如下:虚拟主机名_sec.log
+	
+	查看nginx对应函数: https://www.cnblogs.com/zf-crazy/p/14199932.html
 
 
 ## Copyright
