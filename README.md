@@ -30,8 +30,8 @@ nginx安装路径假设为:/usr/local/nginx/conf/
 把ngx_lua_waf下载到conf目录下,解压命名为waf
 
 在nginx.conf的http段添加
-
-		lua_package_path "/usr/local/nginx/conf/waf/?.lua";
+两个;;代表包含本地原本的库，如果不加，则改变获取库的路径，有可能导致原工具找不到
+		lua_package_path "/usr/local/nginx/conf/waf/?.lua;;";
         lua_shared_dict limit 10m;
         init_by_lua_file  /usr/local/nginx/conf/waf/init.lua; 
     	access_by_lua_file /usr/local/nginx/conf/waf/waf.lua;
