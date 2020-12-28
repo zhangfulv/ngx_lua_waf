@@ -243,3 +243,13 @@ function blockip()
      end
          return false
 end
+function checkJson(jsonTable)
+	for k, v in pairs(jsonTable) do
+		if(type(v) == "table") then
+			checkJson(v)
+		elseif(type(v) == "string") then
+			body(v)
+		end
+	end
+	return
+end
