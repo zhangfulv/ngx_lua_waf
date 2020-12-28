@@ -1,16 +1,31 @@
+--规则存放目录
 RulePath = "/usr/local/nginx/conf/waf/wafconf/"
+--是否开启攻击信息记录，需要配置logdir
 attacklog = "on"
+--log存储目录，该目录需要用户自己新建，切需要nginx用户的可写权限
 logdir = "/usr/local/nginx/logs/hack/"
+ --是否拦截url访问
 UrlDeny="on"
+--是否拦截后重定向
 Redirect="on"
+--是否拦截cookie攻击
 CookieMatch="on"
-postMatch="on" 
-whiteModule="on" 
+ --是否拦截post攻击
+postMatch="on"
+--是否开启URL白名单
+whiteModule="on"
+--填写不允许上传文件后缀类型
 black_fileExt={"php","jsp"}
+--白名单ip地址，多个ip用逗号分隔
 ipWhitelist={"127.0.0.1"}
+--ip黑名单，多个ip用逗号分隔
 ipBlocklist={"1.0.0.1"}
+--是否开启拦截cc攻击(需要nginx.conf的http段增加lua_shared_dict limit 10m;)
 CCDeny="off"
+--设置cc攻击频率，单位为秒.
+--默认1分钟同一个IP只能请求同一个地址100次
 CCrate="100/60"
+--警告内容,可在中括号内自定义
 html=[[
 <html xmlns="http://www.w3.org/1999/xhtml"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
