@@ -20,15 +20,26 @@ elseif PostCheck then
 		ngx.req.read_body()
 		local args = ngx.req.get_body_data()
 		local boundary = get_boundary()
+		-- form表单形式 post传输
 		if boundary then
 			for v in string.gmatch(args, '[\n][^C]+') do
-				--testlog("from-:"..s)
+				--testlog("form-:"..s)
 				body(v)
 			end
 		else
-			-- 解析json格式
-			local json = cjson.decode(args);
-			checkJson(json)
+			-- 解析json格式 ,body json格式或者其它格式..
+			-- username=admin&password=password
+			local asArr = split(args,"&")
+			if asArr then
+				for key,val in pairs(asArr) do
+					local subArr = split(val,"=")
+					body(subArr[1])
+				end
+			else
+				-- json格式
+				local json = cjson.decode(args);
+				checkJson(json)
+			end
 		end
     end
 else
