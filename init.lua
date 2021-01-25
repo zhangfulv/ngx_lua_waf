@@ -259,3 +259,20 @@ function split(s, p)
     string.gsub(s, '[^'..p..']+', function(w) table.insert(rt, w) end )
     return rt
 end
+function isFormUrlEncoded()
+	local header = get_headers()["content-type"]
+    if not header then
+        return nil
+    end
+	if type(header) == "table" then
+        header = header[0]
+    end
+	--testlog("######header#############")
+	--testlog(header)
+	local x= string.match(header, "form")
+	--testlog(x)
+	--if x  then
+    --	testlog("4444")
+	--end
+	return x
+end
