@@ -17,35 +17,56 @@ elseif args() then
 elseif cookie() then
 elseif PostCheck then
     if method=="POST" then
-		ngx.req.read_body()
-		local args = ngx.req.get_body_data()
-		local boundary = get_boundary()
-		-- form表单形式 post传输
-		if boundary then
-			for v in string.gmatch(args, '[\n][^C]+') do
-				--testlog("form-:"..s)
-				body(v)
-			end
-		else
-			-- 解析json格式 ,body json格式或者其它格式..
-			-- username=admin&password=password
-			-- 判断args 为nil 这里作为条件，如果适合nil 则表示false ,防止以uri形式传值，但是选择post方式传，从而获取不到body流空指针报错
-			-- form-urlencoded模式校验
-			if args then
-			    local asArr = split(args,"&")
-			    if #asArr>1 or isFormUrlEncoded() then
-				    for key,val in pairs(asArr) do
-					    local subArr = split(val,"=")
-					    body(subArr[1])
-				    end
-			    else
-				    -- json格式
-				    local json = cjson.decode(args);
-				    checkJson(json)
-			    end
-		    end
-		end
+                ngx.req.read_body()
+                local args = ngx.req.get_body_data()
+                        if args ~= nil then
+                                testlog(args)
+                                args = decodeURI(args)
+                                testlog(args)
+                        end
+                local boundary = get_boundary()
+                -- 过滤传输文件,将所有传输文件的作为白名单过滤，不做校验
+                if get_multipart() and boundary == nil then
+                        testlog("come in multipart-form verify")
+                else
+                        -- form表单形式 post传输
+                        testlog("come in form verify")
+                        if boundary then
+                                testlog("come in boundary verify")
+                                if args ~= nil then
+                                        for v in string.gmatch(args, '[\n][^C]+') do
+                                                if v ~= nil then
+                                                        body(v)
+                                                end
+                                        end
+                                end
+                        else
+                                -- 解析json格式 ,body json格式或者其它格式..
+                                -- username=admin&password=password
+                                if args then
+                                        local asArr = split(args,"&")
+                                        local urlencoded = isFormUrlEncoded()
+                                        if #asArr > 1 or urlencoded then
+                                                testlog("come in urlencoded verify")
+                                                for key,val in pairs(asArr) do
+                                                                testlog(key..":"..val)
+                                                                local subArr = split(val,"=")
+                                                                if subArr[2] ~= nil then
+                                                                        testlog(subArr[2])
+                                                                        body(subArr[2])
+                                                                end
+                                                end
+                                        else
+                                                -- json格式
+                                                testlog("come in json")
+                                                local json = cjson.decode(args);
+                                                checkJson(json)
+                                        end
+                                end
+                        end
+                end
     end
 else
+        testlog("come in return");
     return
 end
