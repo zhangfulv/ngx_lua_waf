@@ -260,19 +260,43 @@ function split(s, p)
     return rt
 end
 function isFormUrlEncoded()
-	local header = get_headers()["content-type"]
+        local header = get_headers()["content-type"]
     if not header then
         return nil
     end
-	if type(header) == "table" then
+        if type(header) == "table" then
         header = header[0]
     end
-	--testlog("######header#############")
-	--testlog(header)
-	local x= string.match(header, "form")
-	--testlog(x)
-	--if x  then
-    --	testlog("4444")
-	--end
-	return x
+        --testlog("######header#############")
+        --testlog(header)
+        local x= string.match(header, "form")
+        --testlog(x)
+        --if x  then
+    --  testlog("4444")
+        --end
+        return x
 end
+function get_multipart()
+    local header = get_headers()["content-type"]
+    if not header then
+        return nil
+    end
+
+    if type(header) == "table" then
+        header = header[1]
+    end
+
+    return match(header, "multipart")
+end
+
+
+function _(hex)
+    local char, tonumber = string.char,  tonumber
+    return char(tonumber(hex, 16))
+end
+function decodeURI(s)
+        local gsub = string.gsub
+        s = gsub(s, '%%(%x%x)', _)
+        return s
+end
+
